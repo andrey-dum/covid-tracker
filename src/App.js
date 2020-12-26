@@ -11,14 +11,14 @@ import {
 import InfoBox from './components/InfoBox/InfoBox';
 import Table from './components/Table/Table';
 import Map from './components/Map/Map';
+import LineGraph from './components/LineGraph/LineGraph';
 
 import numeral from "numeral";
 import { prettyPrintStat, sortData } from './utils';
-import LineGraph from './components/LineGraph/LineGraph';
+import "leaflet/dist/leaflet.css";
 
 
-
-function App() {
+const App = () => {
 
   const [country, setInputCountry] = useState("worldwide");
   const [countries, setCountries] = useState([]);
@@ -27,6 +27,12 @@ function App() {
   const [casesType, setCasesType] = useState("cases");
 
   const [tableData, setTableData] = useState([]);
+  
+  const [mapCountries, setMapCountries] = useState([]);
+  const [mapCenter, setMapCenter] = useState({ lat: 34.80746, lng: -40.4796 });
+  const [mapZoom, setMapZoom] = useState(3);
+
+
   
 
   useEffect(() => {
@@ -49,7 +55,7 @@ function App() {
           let sortedData = sortData(data);
           setCountries(countries);
           setTableData(sortedData);
-     
+          setMapCountries(data);
           
         });
     };
@@ -70,7 +76,8 @@ function App() {
       .then((data) => {
         setInputCountry(countryCode);
         setCountryInfo(data);
-     
+        setMapCenter([data.countryInfo.lat, data.countryInfo.long]);
+        setMapZoom(4);
       });
   };
 
@@ -121,10 +128,15 @@ function App() {
               total={numeral(countryInfo.deaths).format("0.0a")}
           
             />
-        </div>
-                
+          </div>
+          
+          <Map
+            countries={mapCountries}
+            casesType={casesType}
+            center={mapCenter}
+            zoom={mapZoom}
+          />
 
-                <Map />
         </div>
 
 
