@@ -14,6 +14,7 @@ import Map from './components/Map/Map';
 
 import numeral from "numeral";
 import { prettyPrintStat, sortData } from './utils';
+import LineGraph from './components/LineGraph/LineGraph';
 
 
 
@@ -27,7 +28,6 @@ function App() {
 
   const [tableData, setTableData] = useState([]);
   
-
 
   useEffect(() => {
     fetch("https://disease.sh/v3/covid-19/all")
@@ -49,7 +49,7 @@ function App() {
           let sortedData = sortData(data);
           setCountries(countries);
           setTableData(sortedData);
- 
+     
           
         });
     };
@@ -70,7 +70,7 @@ function App() {
       .then((data) => {
         setInputCountry(countryCode);
         setCountryInfo(data);
- 
+     
       });
   };
 
@@ -100,17 +100,17 @@ function App() {
               title="Coronavirus Cases"
               isRed
               active={casesType === "cases"}
- 
-              cases={countryInfo.todayCases}
-              total={countryInfo.cases}
+              cases={prettyPrintStat(countryInfo.todayCases)}
+              total={numeral(countryInfo.cases).format("0.0a")}
             />
             <InfoBox
               onClick={(e) => setCasesType("recovered")}
               title="Recovered"
               active={casesType === "recovered"}
-     
-              cases={countryInfo.todayRecovered}
-              total={countryInfo.recovered}
+              cases={prettyPrintStat(countryInfo.todayRecovered)}
+              total={numeral(countryInfo.recovered).format("0.0a")}
+              // cases={countryInfo.todayRecovered}
+              // total={countryInfo.recovered}
             />
             <InfoBox
               onClick={(e) => setCasesType("deaths")}
@@ -119,7 +119,7 @@ function App() {
               active={casesType === "deaths"}
               cases={prettyPrintStat(countryInfo.todayDeaths)}
               total={numeral(countryInfo.deaths).format("0.0a")}
-     
+          
             />
         </div>
                 
@@ -134,7 +134,7 @@ function App() {
               <h3>Live Cases by Country</h3>
               <Table countries={tableData} />
               <h3>Worldwide new {casesType}</h3>
-         
+              <LineGraph casesType={casesType} />
             </div>
           </CardContent>        
         </Card>

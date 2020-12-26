@@ -4,7 +4,7 @@ import './InfoBox.css'
 import { Card, CardContent, Typography } from '@material-ui/core'
 
 function InfoBox({ title, cases, total, active, isRed, ...props }) {
-    console.log(title, active);
+    // console.log(title, active);
     return (
       <Card
         onClick={props.onClick}
